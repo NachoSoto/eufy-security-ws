@@ -298,7 +298,10 @@ export class DeviceMessageHandler {
         return client.schemaVersion >= 13 ? { async: true } : {};
       case DeviceCommand.startLivestream:
         if (client.schemaVersion >= 2) {
-          if (!station.isLiveStreaming(device)) {
+          if (
+            !station.isLiveStreaming(device) ||
+            serialNumber.startsWith("T8170")
+          ) {
             station.startLivestream(device);
             client.receiveLivestream[serialNumber] = true;
             DeviceMessageHandler.addStreamingDevice(
@@ -329,11 +332,22 @@ export class DeviceMessageHandler {
       case DeviceCommand.stopLivestream:
         if (client.schemaVersion >= 2) {
           if (!station.isLiveStreaming(device)) {
+            if (serialNumber.startsWith("T8170")) {
+              client.receiveLivestream[serialNumber] = false;
+              DeviceMessageHandler.removeStreamingDevice(
+                station.getSerial(),
+                client,
+              );
+              return client.schemaVersion >= 13 ? { async: true } : {};
+            }
             throw new LivestreamNotRunningError(
               `Livestream for device ${serialNumber} could not be stopped, because it is not running`,
             );
           }
           if (client.receiveLivestream[serialNumber] !== true) {
+            if (serialNumber.startsWith("T8170")) {
+              return client.schemaVersion >= 13 ? { async: true } : {};
+            }
             throw new LivestreamNotRunningError(
               `This client has not requested the start of the live stream for the device ${serialNumber} and therefore cannot request its termination`,
             );
