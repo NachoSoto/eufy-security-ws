@@ -56,7 +56,7 @@
     "ansi-colors": "^4.1.3",
     "commander": "^14.0.0",
     "date-and-time": "^4.3.0",
-    "eufy-security-client": "git+https://github.com/NachoSoto/eufy-security-client.git#724a6a267dabb1914802ccb6ba778055a060bb23",
+    "eufy-security-client": "git+https://github.com/NachoSoto/eufy-security-client.git#d07ae69c5867aaee61f0e5d091ceeba9e6070e93",
     "fs-extra": "^11.2.0",
     "tslog": "^4.9.3",
     "ws": "^8.18.3"
