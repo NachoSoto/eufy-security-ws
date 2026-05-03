@@ -2,6 +2,7 @@ import {
   CommandName,
   EufySecurity,
   TalkbackStream,
+  VideoCodec,
 } from "eufy-security-client";
 
 import {
@@ -49,6 +50,7 @@ import {
   IncomingCommandDevicePresetPosition,
   IncomingCommandDeviceSavePresetPosition,
   IncomingCommandDeviceDeletePresetPosition,
+  IncomingCommandDeviceStartLivestream,
 } from "./incoming_message.js";
 import { DeviceResultTypes } from "./outgoing_message.js";
 import {
@@ -298,11 +300,18 @@ export class DeviceMessageHandler {
         return client.schemaVersion >= 13 ? { async: true } : {};
       case DeviceCommand.startLivestream:
         if (client.schemaVersion >= 2) {
+          const livestreamMessage =
+            message as IncomingCommandDeviceStartLivestream;
+          const videoCodec =
+            livestreamMessage.videoCodec === "H265" ||
+            livestreamMessage.videoCodec === 1
+              ? VideoCodec.H265
+              : VideoCodec.H264;
           if (
             !station.isLiveStreaming(device) ||
             serialNumber.startsWith("T8170")
           ) {
-            station.startLivestream(device);
+            station.startLivestream(device, videoCodec);
             client.receiveLivestream[serialNumber] = true;
             DeviceMessageHandler.addStreamingDevice(
               station.getSerial(),

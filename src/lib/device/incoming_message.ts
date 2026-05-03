@@ -79,6 +79,7 @@ export interface IncomingCommandDeviceSetProperty extends IncomingCommandDeviceB
 
 export interface IncomingCommandDeviceStartLivestream extends IncomingCommandDeviceBase {
   command: DeviceCommand.startLivestream;
+  videoCodec?: "H264" | "H265" | 0 | 1;
 }
 
 export interface IncomingCommandDeviceStopLivestream extends IncomingCommandDeviceBase {
