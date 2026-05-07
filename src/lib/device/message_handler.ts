@@ -51,6 +51,8 @@ import {
   IncomingCommandDeviceSavePresetPosition,
   IncomingCommandDeviceDeletePresetPosition,
   IncomingCommandDeviceStartLivestream,
+  IncomingCommandDeviceCancelDownload,
+  IncomingCommandDeviceIsDownloading,
 } from "./incoming_message.js";
 import { DeviceResultTypes } from "./outgoing_message.js";
 import {
@@ -145,8 +147,15 @@ export class DeviceMessageHandler {
 
     const device = await driver.getDevice(serialNumber);
     const requestedStationSerial =
-      command === DeviceCommand.startDownload
-        ? (message as IncomingCommandDeviceStartDownload).stationSerial
+      command === DeviceCommand.startDownload ||
+      command === DeviceCommand.cancelDownload ||
+      command === DeviceCommand.isDownloading
+        ? (
+            message as
+              | IncomingCommandDeviceStartDownload
+              | IncomingCommandDeviceCancelDownload
+              | IncomingCommandDeviceIsDownloading
+          ).stationSerial
         : undefined;
     const stationSerial = requestedStationSerial || device.getStationSerial();
     const station = await driver.getStation(stationSerial);
@@ -454,14 +463,17 @@ export class DeviceMessageHandler {
         }
       case DeviceCommand.startDownload:
         if (client.schemaVersion >= 3) {
-          if (!station.isDownloading(device)) {
+          const startDownloadMessage =
+            message as IncomingCommandDeviceStartDownload;
+          if (!station.isDownloading(device, startDownloadMessage.channel)) {
             await station
               .startDownload(
                 device,
-                (message as IncomingCommandDeviceStartDownload).path,
-                (message as IncomingCommandDeviceStartDownload).cipherId,
+                startDownloadMessage.path,
+                startDownloadMessage.cipherId,
                 requestedStationSerial !== undefined &&
                   requestedStationSerial !== device.getStationSerial(),
+                startDownloadMessage.channel,
               )
               .catch((error) => {
                 throw error;
@@ -486,7 +498,9 @@ export class DeviceMessageHandler {
         }
       case DeviceCommand.cancelDownload:
         if (client.schemaVersion >= 3) {
-          if (!station.isDownloading(device)) {
+          const cancelDownloadMessage =
+            message as IncomingCommandDeviceCancelDownload;
+          if (!station.isDownloading(device, cancelDownloadMessage.channel)) {
             throw new DownloadNotRunningError(
               `Download for device ${serialNumber} could not be cancelled, because it is not running`,
             );
@@ -511,7 +525,7 @@ export class DeviceMessageHandler {
                 station.getSerial(),
                 client,
               );
-              station.cancelDownload(device);
+              station.cancelDownload(device, cancelDownloadMessage.channel);
             }
           }
           return client.schemaVersion >= 13 ? { async: true } : {};
@@ -520,7 +534,12 @@ export class DeviceMessageHandler {
         }
       case DeviceCommand.isDownloading: {
         if (client.schemaVersion >= 13) {
-          const result = station.isDownloading(device);
+          const isDownloadingMessage =
+            message as IncomingCommandDeviceIsDownloading;
+          const result = station.isDownloading(
+            device,
+            isDownloadingMessage.channel,
+          );
           return {
             serialNumber: device.getSerial(),
             downloading: result,

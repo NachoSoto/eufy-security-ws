@@ -755,7 +755,7 @@ export class EventForwarder {
               0,
             );
           })
-          .catch();
+          .catch(() => {});
       },
     );
 
@@ -922,7 +922,7 @@ export class EventForwarder {
                 12,
               );
             })
-            .catch();
+            .catch(() => {});
         }
         if (result.customData !== undefined) {
           if (result.customData.property !== undefined) {
@@ -945,7 +945,7 @@ export class EventForwarder {
                   13,
                 );
               })
-              .catch();
+              .catch(() => {});
           } else if (
             result.customData.command !== undefined &&
             result.customData.command.name.startsWith("device")
@@ -972,7 +972,7 @@ export class EventForwarder {
                   13,
                 );
               })
-              .catch();
+              .catch(() => {});
           }
         }
       }

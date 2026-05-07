@@ -114,15 +114,20 @@ export interface IncomingCommandDeviceStartDownload extends IncomingCommandDevic
   path: string;
   cipherId?: number;
   stationSerial?: string;
+  channel?: number;
 }
 
 export interface IncomingCommandDeviceCancelDownload extends IncomingCommandDeviceBase {
   command: DeviceCommand.cancelDownload;
   voiceId: number;
+  stationSerial?: string;
+  channel?: number;
 }
 
 export interface IncomingCommandDeviceIsDownloading extends IncomingCommandDeviceBase {
   command: DeviceCommand.isDownloading;
+  stationSerial?: string;
+  channel?: number;
 }
 
 export interface IncomingCommandDeviceGetVoices extends IncomingCommandDeviceBase {
