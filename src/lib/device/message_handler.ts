@@ -144,7 +144,12 @@ export class DeviceMessageHandler {
     const { serialNumber, command } = message;
 
     const device = await driver.getDevice(serialNumber);
-    const station = await driver.getStation(device.getStationSerial());
+    const requestedStationSerial =
+      command === DeviceCommand.startDownload
+        ? (message as IncomingCommandDeviceStartDownload).stationSerial
+        : undefined;
+    const stationSerial = requestedStationSerial || device.getStationSerial();
+    const station = await driver.getStation(stationSerial);
 
     switch (command) {
       case DeviceCommand.setStatusLed:

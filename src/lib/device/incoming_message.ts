@@ -113,6 +113,7 @@ export interface IncomingCommandDeviceStartDownload extends IncomingCommandDevic
   command: DeviceCommand.startDownload;
   path: string;
   cipherId?: number;
+  stationSerial?: string;
 }
 
 export interface IncomingCommandDeviceCancelDownload extends IncomingCommandDeviceBase {
