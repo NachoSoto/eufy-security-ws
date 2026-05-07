@@ -250,6 +250,9 @@ export class StationMessageHandler {
             .detectionType;
           const storageType = (message as IncomingCommandDatabaseQueryLocal)
             .storageType;
+          const startTime = (message as IncomingCommandDatabaseQueryLocal)
+            .startTime;
+          const count = (message as IncomingCommandDatabaseQueryLocal).count;
           station.databaseQueryLocal(
             serialNumbers,
             startDate,
@@ -257,6 +260,8 @@ export class StationMessageHandler {
             eventType,
             detectionType,
             storageType,
+            startTime,
+            count,
           );
           return { async: true };
         } else {
@@ -280,6 +285,9 @@ export class StationMessageHandler {
             .detectionType;
           const storageType = (message as IncomingCommandDatabaseQueryByDate)
             .storageType;
+          const startTime = (message as IncomingCommandDatabaseQueryByDate)
+            .startTime;
+          const count = (message as IncomingCommandDatabaseQueryByDate).count;
           station.databaseQueryByDate(
             serialNumbers,
             startDate,
@@ -287,6 +295,8 @@ export class StationMessageHandler {
             eventType,
             detectionType,
             storageType,
+            startTime,
+            count,
           );
           return { async: true };
         } else {

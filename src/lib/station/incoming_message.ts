@@ -93,6 +93,8 @@ export interface IncomingCommandDatabaseQueryLocal extends IncomingCommandStatio
   eventType?: FilterEventType;
   detectionType?: FilterDetectType;
   storageType?: FilterStorageType;
+  startTime?: string;
+  count?: number;
 }
 
 export interface IncomingCommandDatabaseQueryByDate extends IncomingCommandStationBase {
@@ -103,6 +105,8 @@ export interface IncomingCommandDatabaseQueryByDate extends IncomingCommandStati
   eventType?: FilterEventType;
   detectionType?: FilterDetectType;
   storageType?: FilterStorageType;
+  startTime?: string;
+  count?: number;
 }
 
 export interface IncomingCommandDatabaseCountByDate extends IncomingCommandStationBase {
