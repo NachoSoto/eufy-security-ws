@@ -460,6 +460,8 @@ export class DeviceMessageHandler {
                 device,
                 (message as IncomingCommandDeviceStartDownload).path,
                 (message as IncomingCommandDeviceStartDownload).cipherId,
+                requestedStationSerial !== undefined &&
+                  requestedStationSerial !== device.getStationSerial(),
               )
               .catch((error) => {
                 throw error;
