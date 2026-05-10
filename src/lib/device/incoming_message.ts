@@ -102,6 +102,7 @@ export interface IncomingCommandDeviceResetAlarm extends IncomingCommandDeviceBa
 export interface IncomingCommandDevicePanAndTilt extends IncomingCommandDeviceBase {
   command: DeviceCommand.panAndTilt;
   direction: PanTiltDirection;
+  zoom?: number;
 }
 
 export interface IncomingCommandDeviceQuickResponse extends IncomingCommandDeviceBase {

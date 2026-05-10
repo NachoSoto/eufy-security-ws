@@ -443,9 +443,12 @@ export class DeviceMessageHandler {
         }
       case DeviceCommand.panAndTilt:
         if (client.schemaVersion >= 3) {
-          station.panAndTilt(
+          const panAndTiltMessage = message as IncomingCommandDevicePanAndTilt;
+          (station.panAndTilt as any)(
             device,
-            (message as IncomingCommandDevicePanAndTilt).direction,
+            panAndTiltMessage.direction,
+            1,
+            panAndTiltMessage.zoom ?? 1.0,
           );
           return client.schemaVersion >= 13 ? { async: true } : {};
         } else {
