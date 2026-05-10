@@ -238,7 +238,7 @@ const cmdHelp = (cmd: string): void => {
       console.log(`${cmd} <device_sn> <seconds>`);
       break;
     case DeviceCommand.panAndTilt:
-      console.log(`${cmd} <device_sn> <direction> [zoom]`);
+      console.log(`${cmd} <device_sn> <direction> [zoom] [action]`);
       break;
     case DeviceCommand.quickResponse:
       console.log(`${cmd} <device_sn> <voiceId>`);
@@ -826,14 +826,19 @@ const cmd = async (
       }
       break;
     case DeviceCommand.panAndTilt:
-      if (args.length === 3 || (args.length === 4 && isNumber(args[3]))) {
+      if (
+        args.length === 3 ||
+        (args.length === 4 && isNumber(args[3])) ||
+        (args.length === 5 && isNumber(args[3]) && isNumber(args[4]))
+      ) {
         socket.send(
           JSON.stringify({
             messageId: DeviceCommand.panAndTilt.split(".")[1],
             command: DeviceCommand.panAndTilt,
             serialNumber: args[1],
             direction: Number.parseInt(args[2]),
-            zoom: args.length === 4 ? Number.parseFloat(args[3]) : undefined,
+            zoom: args.length >= 4 ? Number.parseFloat(args[3]) : undefined,
+            action: args.length === 5 ? Number.parseInt(args[4]) : undefined,
           }),
         );
       } else {

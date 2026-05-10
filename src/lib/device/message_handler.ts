@@ -447,7 +447,7 @@ export class DeviceMessageHandler {
           (station.panAndTilt as any)(
             device,
             panAndTiltMessage.direction,
-            1,
+            panAndTiltMessage.action ?? 1,
             panAndTiltMessage.zoom ?? 1.0,
           );
           return client.schemaVersion >= 13 ? { async: true } : {};
